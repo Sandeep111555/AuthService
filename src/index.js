@@ -5,6 +5,9 @@ const apiRoutes = require('./routes');
 
 const app = express();
 
+app.use(express.json()); //to make express understand that the incoming payload is a json object
+app.use(express.urlencoded({extended:true}));
+
 app.use('/api', apiRoutes);
 
 app.listen(ServerConfig.PORT, () => {
