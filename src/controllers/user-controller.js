@@ -71,4 +71,18 @@ async function signIn(req,res){
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(ErrorResponse);
     }
 }
-module.exports = {createUser,deleteUser,getUserById,getAllUsers,signIn};
+async function isAuthenticated(req,res){
+    try {
+        const token = req.headers['x-access-token'];
+        const isAuthenticatedUser = await userService.isAuthenticated(token);
+        SuccessResponse.message = "User is Authenticated";
+        SuccessResponse.data = isAuthenticatedUser;
+        return res.status(StatusCodes.OK).json(SuccessResponse);
+    } catch (error) {
+        console.log("Something went wrong in isAuthenticated()");
+        ErrorResponse.message = "Something went wrong in isAuthenticated()";
+        ErrorResponse.error = error;
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(ErrorResponse);
+    }
+}
+module.exports = {createUser,deleteUser,getUserById,getAllUsers,signIn,isAuthenticated};

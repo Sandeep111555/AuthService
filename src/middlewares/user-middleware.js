@@ -1,7 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const { ErrorResponse } = require("../utils/common");
 
-const validateResgisterUser = (req, res, next) => {
+const validateRegisterUser = (req, res, next) => {
     const {email,password} = req.body;
     if(!email || !password){
         ErrorResponse.data = null;
@@ -10,4 +10,4 @@ const validateResgisterUser = (req, res, next) => {
     }
     next();
 }
-module.exports = {validateResgisterUser};
+module.exports = {validateRegisterUser};

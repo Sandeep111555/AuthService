@@ -1,5 +1,5 @@
 const { UserRepository } = require('../repositories');
-const {ServerConfig} = require('../config')
+const { ServerConfig } = require('../config')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const userRepository = new UserRepository();
@@ -45,48 +45,65 @@ async function getAllUsers() {
     }
 }
 
-function createToken(user){
-    try{
-        const token = jwt.sign(user,JWT_KEY,{ expiresIn: '1h'});
+function createToken(user) {
+    try {
+        const token = jwt.sign(user, JWT_KEY, { expiresIn: '1h' });
         return token;
-    } catch(error){
+    } catch (error) {
         console.log("something went wrong in service");
         throw error;
     }
 }
-function verifyToken(user){
-    try{
-        var response = jwt.verify(user,JWT_KEY);
+function verifyToken(jwtToken) {
+    try {
+        console.log(jwtToken);
+        var response = jwt.verify(jwtToken, JWT_KEY);
         return response;
-    } catch(error){
+    } catch (error) {
         console.log("something went wrong in token validation");
         throw error;
     }
 }
-async function signIn(email,plainPassword){
+async function signIn(email, plainPassword) {
     try {
         //fetching user using email
         const user = await userRepository.findByEmail(email);
         //compare incoming plain password with stored encrypt password
-        const passwordCheck = checkPassword(plainPassword,user.password);
-        if(!passwordCheck){
+        const passwordCheck = checkPassword(plainPassword, user.password);
+        if (!passwordCheck) {
             console.log("Password doesn't match");
-            throw {error: "Incorrect password"};
+            throw { error: "Incorrect password" };
         }
         //if match then create jwt token
-        const jwtToken = createToken({id:user.id,email:user.email});
+        const jwtToken = createToken({ id: user.id, email: user.email });
         return jwtToken;
     } catch (error) {
         console.log('Something went wrong in signing');
         throw error;
     }
 }
-function checkPassword(plainPassword,encryptedPassword){
+function checkPassword(plainPassword, encryptedPassword) {
     try {
-        return bcrypt.compareSync(plainPassword,encryptedPassword);
+        return bcrypt.compareSync(plainPassword, encryptedPassword);
     } catch (error) {
         console.log('something went wrong in checking password');
         throw error;
     }
 }
-module.exports = { createUser, deleteUser, getUserById, getAllUsers,signIn };
+async function isAuthenticated(jwtToken){
+    try {
+        const response = verifyToken(jwtToken);
+        if(!response){
+            throw {error:"Unauthorized user"};
+        }
+        const user = await userRepository.getUserById(response.id);
+        if(!user){
+            throw {error:"user not found"};
+        }
+        return user.id;
+    } catch (error) {
+        console.log("something went wrong in isAuthenticated()");
+        throw error;
+    }
+}
+module.exports = { createUser, deleteUser, getUserById, getAllUsers, signIn, isAuthenticated};
