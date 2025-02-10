@@ -58,4 +58,17 @@ async function getAllUsers(req,res){
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(ErrorResponse);
     }
 }
-module.exports = {createUser,deleteUser,getUserById,getAllUsers};
+async function signIn(req,res){
+    try {
+        const token = await userService.signIn(req.body.email,req.body.password);
+        SuccessResponse.message = "User Authenticated";
+        SuccessResponse.data = token;
+        return res.status(StatusCodes.OK).json(SuccessResponse);
+    } catch (error) {
+        console.log("Something went wrong in signIn");
+        ErrorResponse.message = "Something went wrong in signIn";
+        ErrorResponse.error = error;
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(ErrorResponse);
+    }
+}
+module.exports = {createUser,deleteUser,getUserById,getAllUsers,signIn};

@@ -7,4 +7,5 @@ router.post('/register',userMiddleware.validateResgisterUser,UserController.crea
 router.get('/', UserController.getAllUsers);
 router.get('/:userId', UserController.getUserById);
 router.delete('/:userId', UserController.deleteUser);
+router.post('/signIn',UserMiddleware.validateResgisterUser,UserController.signIn);
 module.exports = router;
