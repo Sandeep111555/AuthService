@@ -21,7 +21,7 @@ class UserRepository {
     }
     async getUserById(userId) {
         try {
-            return await User.findByPk(userId);
+            return await User.findByPk(userId,{attributes:['id','email']});
         }
         catch (error) {
             console.log("Something went wrong in repo");
@@ -30,7 +30,7 @@ class UserRepository {
     }
     async getAllUsers() {
         try {
-            return await User.findAll();
+            return await User.findAll({attributes:['id','email']});
         }
         catch (error) {
             console.log("Something went wrong in repo");

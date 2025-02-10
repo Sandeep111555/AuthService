@@ -1,6 +1,8 @@
 const { UserRepository } = require('../repositories');
+const {ServerConfig} = require('../config')
+const jwt = require('jsonwebtoken')
 const userRepository = new UserRepository();
-
+const JWT_KEY = ServerConfig.JWT_KEY;
 async function createUser(data) {
     try {
         const user = await userRepository.create(data);
@@ -41,4 +43,52 @@ async function getAllUsers() {
         throw error;
     }
 }
-module.exports = { createUser, deleteUser, getUserById, getAllUsers };
+function createToken(user){
+    try{
+        var token = jwt.sign(user,JWT_KEY,{expiresIn: '1h'});
+
+    } catch(error){
+        console.log("something went wrong in service");
+    }
+}
+function createToken(user){
+    try{
+        var token = jwt.sign(user,JWT_KEY,{expiresIn: '1h'});
+
+    } catch(error){
+        console.log("something went wrong in service");
+    }
+}
+function createToken(user){
+    try{
+        var token = jwt.sign(user,JWT_KEY,{expiresIn: '1h'});
+
+    } catch(error){
+        console.log("something went wrong in service");
+    }
+}
+function createToken(user){
+    try{
+        var token = jwt.sign(user,JWT_KEY,{expiresIn: '1h'});
+
+    } catch(error){
+        console.log("something went wrong in service");
+    }
+}
+function createToken(user){
+    try{
+        var token = jwt.sign(user,JWT_KEY,{expiresIn: '1h'});
+        
+    } catch(error){
+        console.log("something went wrong in token creation");
+    }
+}
+function verifyToken(user){
+    try{
+        var response = jwt.verify(user,JWT_KEY);
+
+    } catch(error){
+        console.log("something went wrong in token validation");
+    }
+}
+module.exports = { createUser, deleteUser, getUserById, getAllUsers, verifyToken, createToken };
