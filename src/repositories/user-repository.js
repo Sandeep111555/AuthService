@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, Role } = require('../models');
 class UserRepository {
     async create(data) {
         console.log("data", data);
@@ -21,7 +21,7 @@ class UserRepository {
     }
     async getUserById(userId) {
         try {
-            return await User.findByPk(userId,{attributes:['id','email']});
+            return await User.findByPk(userId, { attributes: ['id', 'email'] });
         }
         catch (error) {
             console.log("Something went wrong in repo");
@@ -30,20 +30,42 @@ class UserRepository {
     }
     async getAllUsers() {
         try {
-            return await User.findAll({attributes:['id','email']});
+            return await User.findAll({ attributes: ['id', 'email'] });
         }
         catch (error) {
             console.log("Something went wrong in repo");
             throw error;
         }
     }
-    async findByEmail(email){
+    async findByEmail(email) {
         try {
-            return await User.findOne({where:{
-                email
-            }})
+            return await User.findOne({
+                where: {
+                    email
+                }
+            })
         } catch (error) {
             console.log("Something went wrong in findByEmail() Repository layer");
+            throw error;
+        }
+    }
+    async isAdmin(userId) {
+        try {
+            const user = await User.findByPk(userId);
+            if (!user) {
+                throw new Error("User not found");
+            }
+            const adminRole = await Role.findOne({
+                where: {
+                    name: 'ADMIN'
+                }
+            })
+            if (!adminRole) {
+                throw new Error("Admin role not found");
+            }
+            return await user.hasRole(adminRole);
+        } catch (error) {
+            console.log("Something went wrong in isAdmin() Repository layer");
             throw error;
         }
     }

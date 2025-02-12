@@ -7,6 +7,7 @@ router.get('/isAuthenticatedUser', UserController.isAuthenticated);
 router.get('/', UserController.getAllUsers);
 router.post('/register', userMiddleware.validateRegisterUser, UserController.createUser);
 router.post('/signIn', UserMiddleware.validateRegisterUser, UserController.signIn);
+router.get('/isAdmin',UserMiddleware.validateIsAdmin,UserController.isAdmin);
 router.get('/:userId', UserController.getUserById);
 router.delete('/:userId', UserController.deleteUser);
 module.exports = router;

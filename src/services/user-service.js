@@ -106,4 +106,13 @@ async function isAuthenticated(jwtToken){
         throw error;
     }
 }
-module.exports = { createUser, deleteUser, getUserById, getAllUsers, signIn, isAuthenticated};
+async function isAdmin(userId){
+    try{
+        const isAdminRole = await userRepository.isAdmin(userId);
+        return isAdminRole;
+    } catch(error){
+        console.log("something went wrong in isAdmin()");
+        throw error;
+    }
+}
+module.exports = { createUser, deleteUser, getUserById, getAllUsers, signIn, isAuthenticated,isAdmin};
